@@ -5,15 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.lilong.hotfixdemo.ui.MainActivity">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:text="热修复实验"
-        android:textSize="20sp"/>
+    tools:context="com.lilong.hotfixdemo.ui.WelcomeActivity">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -22,12 +14,18 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/btnCallMethod"
+            android:id="@+id/btnWithoutHotfix"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="调用方法"
+            android:text="直接进"
             android:textSize="15sp"/>
 
+        <Button
+            android:id="@+id/btnWithHotfix"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="热修复一下再进"
+            android:textSize="15sp"/>
     </LinearLayout>
-
 </RelativeLayout>

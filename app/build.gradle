@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+import javassist.ClassPool
+import javassist.CtClass
+import javassist.CtMethod
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -23,15 +27,7 @@ dependencies {
     compile rootProject.ext.v7SupportLib
 }
 
-task deleteFixedClassesForDex(type: Delete) {
-    delete rootProject.ext.fixedClassesToDirAbsPath
-}
 
-task copyFixedClassesForDex(type: Copy) {
-    from rootProject.ext.allClassesDirAbsPath
-    into rootProject.ext.fixedClassesToDirAbsPath
-    include "${rootProject.ext.fixedClassesFromDirRelativePath}/**"
-}
 
 task createFixedDexDir << {
     File fixedDexDir = new File("${rootProject.ext.fixedDexDirAbsPath}")
@@ -45,14 +41,43 @@ task deleteFixedDexDir(type: Delete) {
     delete rootProject.ext.fixedDexDirAbsPath
 }
 
+/** 把修复后的class文件打成dex*/
 task createFixedDex(type: Exec) {
     workingDir "${rootProject.ext.fixedDexDirAbsPath}"
     // 1 dx必须写全路径，即使它已被设置到环境变量里，gradle还是无法识别
     // 2 命令中的所有部分，必须按照空格为分隔符，分成几部分，作为数组输入给commandLine方法
     // 3 dx命令中--output=xxx，这个xxx必须是dex文件名，不能包含目录，否则会报找不到目录
-    commandLine "/home/lilong/android-sdk/build-tools/23.0.2/dx", "--dex", "--output=${rootProject.ext.fixedDexName}", "${rootProject.ext.fixedClassesToDirAbsPath}"
+    commandLine "/home/lilong/android-sdk/build-tools/23.0.2/dx", "--dex", "--output=${rootProject.ext.fixedDexName}", "${rootProject.ext.fixedClassesDirAbsPath}"
 }
 
-createFixedDex.dependsOn createFixedDexDir, copyFixedClassesForDex
+/** 删除修复完的class文件所在目录*/
+task deleteFixedClassesDir(type: Delete) {
+    delete rootProject.ext.fixedClassesDirAbsPath
+}
+
+/** 创建修复完的class文件所在目录*/
+task createFixedClassesDir << {
+    File fixedClassesDir = new File("${rootProject.ext.fixedClassesDirAbsPath}")
+    if (fixedClassesDir.exists() && fixedClassesDir.isDirectory()) {
+        return
+    }
+    fixedClassesDir.mkdir();
+}
+
+/** 把要修复的class文件修复了*/
+task createFixedClass << {
+    ClassPool pool = ClassPool.getDefault();
+    pool.appendClassPath("${rootProject.ext.allClassesDirAbsPath}")
+    pool.appendClassPath("/home/lilong/android-sdk/platforms/android-25/android.jar")
+    CtClass c = pool.get("${rootProject.ext.fixedClassName}")
+    CtMethod[] ctMethods = c.getDeclaredMethod("${rootProject.ext.fixedClassMethodName}");
+    CtMethod ctMethod = ctMethods[0];
+    ctMethod.setBody("${rootProject.ext.fixedClassMethodBody}");
+    c.writeFile("${rootProject.ext.fixedClassesDirAbsPath}")
+    c.detach()
+}
+
+
+createFixedDex.dependsOn createFixedDexDir, createFixedClass
 createFixedDexDir.dependsOn deleteFixedDexDir
-copyFixedClassesForDex.dependsOn deleteFixedClassesForDex, assemble
+createFixedClass.dependsOn assemble, deleteFixedClassesDir

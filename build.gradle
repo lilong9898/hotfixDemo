@@ -11,7 +11,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.0'
-        
+        classpath 'org.javassist:javassist:3.20.0-GA'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -36,11 +36,23 @@ ext {
     v7SupportLib = "com.android.support:appcompat-v7:25.1.0"
     gradleAndroidPlugin = "com.android.tools.build:gradle:2.2.0"
 
+    // 要修复的类的类名
+    fixedClassName = "com.lilong.hotfixdemo.fixed.Util"
+    // 要修复的类的方法的方法名
+    fixedClassMethodName = "showToast"
+    // 修复成的方法体
+    fixedClassMethodBody = "android.widget.Toast.makeText(com.lilong.hotfixdemo.application.DemoApplication.getInstance(), \"This is a good method\", android.widget.Toast.LENGTH_SHORT).show();"
+
+    // 原始的所有类的class文件
     allClassesDirAbsPath = String.join(File.separator, rootProject.findProject(":app").projectDir.absolutePath, "build", "intermediates", "classes", "debug")
-    fixedClassesFromDirRelativePath = String.join(File.separator, "com", "lilong", "hotfixdemo", "fixed")
-    fixedClassesToDirAbsPath = String.join(File.separator, rootProject.findProject(":app").projectDir.absolutePath, "fixedClass")
+
+    // 修复后的class所在目录
+    fixedClassesDirAbsPath = String.join(File.separator, rootProject.findProject(":app").projectDir.absolutePath, "fixedClass")
+
+    // 补丁dex的名字
     fixedDexName = "fixed.dex"
     // 生成的补丁dex放到assets目录下
     fixedDexDirAbsPath = String.join(File.separator, rootProject.findProject(":app").projectDir.absolutePath, "src", "main", "assets")
+    // 生成的补丁dex的路径
     fixedDexAbsPath = String.join(File.separator, fixedDexDirAbsPath, fixedDexName)
 }

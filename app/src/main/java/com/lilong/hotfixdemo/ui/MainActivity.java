@@ -11,7 +11,6 @@ import com.lilong.hotfixdemo.fixed.Util;
 public class MainActivity extends AppCompatActivity {
 
     private Button mBtnCallMethod;
-    private Button mBtnHotFix;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,13 +23,11 @@ public class MainActivity extends AppCompatActivity {
                 Util.showToast();
             }
         });
-        mBtnHotFix = (Button) findViewById(R.id.btnHotFix);
-        mBtnHotFix.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        android.os.Process.killProcess(android.os.Process.myPid());
+    }
 }

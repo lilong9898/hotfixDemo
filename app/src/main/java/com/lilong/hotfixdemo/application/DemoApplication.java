@@ -3,20 +3,23 @@ package com.lilong.hotfixdemo.application;
 import android.app.Application;
 import android.content.Context;
 
+import com.lilong.hotfixdemo.hotfix.HotfixManager;
+
 /**
  */
 
-public class HotfixDemoApplication extends Application {
+public class DemoApplication extends Application {
 
-    private static HotfixDemoApplication sInstance;
+    private static DemoApplication sInstance;
 
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         sInstance = this;
+        HotfixManager.getInstance().init();
     }
 
-    public static HotfixDemoApplication getInstance(){
+    public static DemoApplication getInstance(){
         return sInstance;
     }
 }
