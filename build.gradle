@@ -40,6 +40,7 @@ ext {
     fixedClassesFromDirRelativePath = String.join(File.separator, "com", "lilong", "hotfixdemo", "fixed")
     fixedClassesToDirAbsPath = String.join(File.separator, rootProject.findProject(":app").projectDir.absolutePath, "fixedClass")
     fixedDexName = "fixed.dex"
-    fixedDexDirAbsPath = String.join(File.separator, rootProject.findProject(":app").projectDir.absolutePath, "fixedDex")
+    // 生成的补丁dex放到assets目录下
+    fixedDexDirAbsPath = String.join(File.separator, rootProject.findProject(":app").projectDir.absolutePath, "src", "main", "assets")
     fixedDexAbsPath = String.join(File.separator, fixedDexDirAbsPath, fixedDexName)
 }
