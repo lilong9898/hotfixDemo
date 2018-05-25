@@ -35,4 +35,11 @@ ext {
     buildToolsVersion = "23.0.2"
     v7SupportLib = "com.android.support:appcompat-v7:25.1.0"
     gradleAndroidPlugin = "com.android.tools.build:gradle:2.2.0"
+
+    allClassesDirAbsPath = String.join(File.separator, rootProject.findProject(":app").projectDir.absolutePath, "build", "intermediates", "classes", "debug")
+    fixedClassesFromDirRelativePath = String.join(File.separator, "com", "lilong", "hotfixdemo", "fixed")
+    fixedClassesToDirAbsPath = String.join(File.separator, rootProject.findProject(":app").projectDir.absolutePath, "fixedClass")
+    fixedDexName = "fixed.dex"
+    fixedDexDirAbsPath = String.join(File.separator, rootProject.findProject(":app").projectDir.absolutePath, "fixedDex")
+    fixedDexAbsPath = String.join(File.separator, fixedDexDirAbsPath, fixedDexName)
 }

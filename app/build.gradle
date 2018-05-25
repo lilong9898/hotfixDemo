@@ -22,3 +22,37 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile rootProject.ext.v7SupportLib
 }
+
+task deleteFixedClassesForDex(type: Delete) {
+    delete rootProject.ext.fixedClassesToDirAbsPath
+}
+
+task copyFixedClassesForDex(type: Copy) {
+    from rootProject.ext.allClassesDirAbsPath
+    into rootProject.ext.fixedClassesToDirAbsPath
+    include "${rootProject.ext.fixedClassesFromDirRelativePath}/**"
+}
+
+task createFixedDexDir << {
+    File fixedDexDir = new File("${rootProject.ext.fixedDexDirAbsPath}")
+    if (fixedDexDir.exists() && fixedDexDir.isDirectory()) {
+        return
+    }
+    fixedDexDir.mkdir();
+}
+
+task deleteFixedDexDir(type: Delete) {
+    delete rootProject.ext.fixedDexDirAbsPath
+}
+
+task createFixedDex(type: Exec) {
+    workingDir "${rootProject.ext.fixedDexDirAbsPath}"
+    // 1 dx必须写全路径，即使它已被设置到环境变量里，gradle还是无法识别
+    // 2 命令中的所有部分，必须按照空格为分隔符，分成几部分，作为数组输入给commandLine方法
+    // 3 dx命令中--output=xxx，这个xxx必须是dex文件名，不能包含目录，否则会报找不到目录
+    commandLine "/home/lilong/android-sdk/build-tools/23.0.2/dx", "--dex", "--output=${rootProject.ext.fixedDexName}", "${rootProject.ext.fixedClassesToDirAbsPath}"
+}
+
+createFixedDex.dependsOn createFixedDexDir, copyFixedClassesForDex
+createFixedDexDir.dependsOn deleteFixedDexDir
+copyFixedClassesForDex.dependsOn deleteFixedClassesForDex, assemble
