@@ -12,3 +12,5 @@
 1. 通过Android Studio的package manager安装23.0.2版本的build-tools，和android 25 platform
 2. 项目使用的gradle版本是3.5，android gradle plugin版本是2.2.0，如果没装的话可以提前下载
 3. 打开项目，执行gradle sync以下载必要的依赖，完成后的工程结构:
+
+![](./demo/project_structure.png)
