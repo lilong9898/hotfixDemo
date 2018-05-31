@@ -14,3 +14,7 @@
 3. 打开项目，执行gradle sync以下载必要的依赖，完成后的工程结构:
 
 ![](./demo/project_structure.png)
+
+4. 每次运行前，请执行以下gradle task:
+
+![](./demo/task_createFixedDex.png)
