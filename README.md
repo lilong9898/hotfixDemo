@@ -18,3 +18,9 @@
 4. 每次运行前，请执行以下gradle task:
 
 ![](./demo/task_createFixedDex.png)
+
+或者直接把这个task设置到AS的run configuration里：
+
+![](./demo/modify_configuration.png)
+
+5. 运行：
