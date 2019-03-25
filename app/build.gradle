@@ -13,6 +13,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -20,11 +21,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    dexOptions {
+        additionalParameters '--minimal-main-dex'
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile rootProject.ext.v7SupportLib
+    compile 'com.android.support:multidex:1.0.0'
 }
 
 
@@ -81,3 +87,11 @@ task createFixedClass << {
 createFixedDex.dependsOn createFixedDexDir, createFixedClass
 createFixedDexDir.dependsOn deleteFixedDexDir
 createFixedClass.dependsOn assemble, deleteFixedClassesDir
+
+apply plugin:com.lilong.gradle.transform.maindex.FixMainDexPlugin
+
+// FixMainDexPlugin工作在maindex瘦身模式
+fixMainDexExtension {
+    mode FixMainDexMode.REMOVE_EXCLUDED_PACKAGES
+    maindexExcludedPackages "com.lilong.hotfixdemo.another.dex"
+}

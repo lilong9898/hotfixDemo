@@ -1,14 +1,14 @@
 package com.lilong.hotfixdemo.application;
 
-import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDexApplication;
 
 import com.lilong.hotfixdemo.hotfix.HotfixManager;
 
 /**
  */
 
-public class DemoApplication extends Application {
+public class DemoApplication extends MultiDexApplication {
 
     private static DemoApplication sInstance;
 
